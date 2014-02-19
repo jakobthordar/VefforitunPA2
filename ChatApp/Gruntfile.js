@@ -11,20 +11,53 @@ module.exports = function(grunt) {
           "src/js/controllers/*.js",
         ],
       },
-    }
+    },
+    concat: {
+        dist: {
+            src: [
+            'src/js/app.js', 
+            'src/js/controllers/login.js',
+            'src/js/controllers/room.js',
+            'src/js/services/socket.js'
+            ],
+            dest: 'build/production.js',
+        }
+    },
+    uglify: {
+        build: {
+            src:    'build/production.js',
+            dest:   'build/chatapp.min.js',
+        }
+    },
+    connect: { 
+        server: { 
+            options: { 
+                port: 8080, 
+                keepalive:  true, 
+                livereload: false, 
+                open:       true, 
+            }
+        }
+    },
     /*
-       The task to concatenate and minify the code has been removed
-       You have to figure that one out yourself :)
-
-       And since the index is referencing the file from that task
-       it wont receive your updates until you figure this task out
-       or reference the original src/ files
-    */
+    watch: {
+        scripts: {
+            files: ['js/*.js'],
+            tasks: ['concat', 'uglify'],
+            options: {
+                spawn: false,
+            },
+        }
+    }*/
   });
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  //grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', /* more tasks here */]);
+  grunt.registerTask('default', ['jshint', 'uglify', 'concat', 'connect'/*'watch'*/]);
 };
