@@ -56,6 +56,9 @@ io.sockets.on('connection', function (socket) {
 			fn(true);
 			io.sockets.emit('updateusers', room, rooms[room].users, rooms[room].ops);
 			//Update topic
+            //I, Jakob Thordarson, added this line to be able to dynamically update 
+            //the roomlist in the menu
+            io.sockets.emit('roomlist', rooms);
 			socket.emit('updatetopic', room, rooms[room].topic, socket.username);
 			io.sockets.emit('servermessage', "join", room, socket.username);
 		}

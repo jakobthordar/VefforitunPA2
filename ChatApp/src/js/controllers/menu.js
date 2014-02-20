@@ -3,25 +3,30 @@ app.controller("MenuController", ["$scope", "$location", "$routeParams", "Socket
     var socket = SocketService.getSocket();
 
     //I add a delay to the scope to avoid the thingymajig
-    var updateScope = function(room) {
-        $scope.rooms.push(room);
+    var updateScope = function(temprooms) {
+        $scope.rooms = temprooms;
     };
-    $timeout(updateScope, 100);
+    //$timeout(updateScope, 100);
 
     if(socket){
         socket.emit("rooms");
-        console.log("Before room print");
         socket.on("roomlist", function(roomlist){
+            var temprooms = [];
             for (var room in roomlist){
-                updateScope(room);
+                temprooms.push(room);
             }
-            console.log($scope.rooms);
+            updateScope(temprooms);
+            $scope.$apply();
         });
 
         $scope.join = function() {
-            SocketService.setRoom($scope.roomname);
             console.log("I am joining the room " + $scope.roomname);
             $location.path("/room/" + $scope.roomname);
         };
     }
+    $scope.keyPress = function($event) {
+        if($event.keyCode === 13) {
+            $scope.send();
+        }
+    };
 }]);

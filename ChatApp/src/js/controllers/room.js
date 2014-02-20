@@ -9,7 +9,7 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
     var updateScope = function(tempUsers) {
         $scope.users = tempUsers;
     };
-    $timeout(updateScope, 200);
+    //$timeout(updateScope, 200);
 
     if(socket) {
         socket.emit("joinroom", { room: $scope.roomName, pass: "" }, function(success, errorMessage) {
@@ -22,16 +22,28 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
             $scope.$apply();
         });
 
-        socket.on("updateusers", function(room, users) {
+        socket.on("updateusers", function(room, users, ops) {
             if(room === $scope.roomName) {
                 var tempusers = [];
-                for (var item in users){
-                    tempusers.push(item);
-                    console.log(item);
+                //Add users to the temp array
+                //TODO: Make a special list for ops
+                for (var user in users){
+                    tempusers.push(user);
+                    console.log("User: " + user);
+                }
+                for (var op in ops) {
+                    tempusers.push(op);
+                    SocketService.setUserOp(room, op);
+                    console.log("Op: " + op);
+                }
+                if(SocketService.isUserOp(room) === true) {
+                    console.log("Yay im an op!");
+                }else{
+                    console.log("I'm not an op :(");
                 }
                 updateScope(tempusers);
-                console.log("End of user list");
             }
+            $scope.$apply();
         });
     }
     $scope.leave = function() {

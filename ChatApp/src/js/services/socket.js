@@ -1,7 +1,8 @@
 app.factory("SocketService", ["$http", function($http) {
     var username = "";
     var socket;
-    var roomname = "";
+    var roomOp = "";
+    var isOp = false;
     return {
         setConnected: function(theSocket) {
             socket = theSocket;
@@ -9,8 +10,11 @@ app.factory("SocketService", ["$http", function($http) {
         setUsername: function(user) {
             username = user;
         },
-        setRoom: function(user, room) {
-            roomname = room;
+        setUserOp: function(room, op) {
+            if(op == username) {
+                roomOp = room;
+                isOp = true;
+            }
         },
         getUsername: function() {
             return username;
@@ -18,8 +22,11 @@ app.factory("SocketService", ["$http", function($http) {
         getSocket: function() {
             return socket;
         },
-        getRoom: function() {
-            return roomname;
+        isUserOp: function(room) {
+            if((roomOp == room) && (isOp === true)){
+                return true;
+            }
+            return false;
         }
     };
 }]);
