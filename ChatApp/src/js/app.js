@@ -7,5 +7,8 @@ app.config(["$routeProvider", function($routeProvider) {
 	}).when("/room/:roomName", {
 		templateUrl: "templates/room.html",
 		controller: "RoomController",
+    }).when("/menu",{
+        templateUrl: "templates/menu.html",
+        controller: "MenuController",
 	}).otherwise({ redirectTo: "/" });
 }]);

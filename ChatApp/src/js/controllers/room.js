@@ -1,4 +1,3 @@
-
 app.controller("RoomController", ["$scope", "$routeParams", "SocketService", function($scope, $routeParams, SocketService) {
 	$scope.roomName = $routeParams.roomName;
 	$scope.currentMessage = "";
