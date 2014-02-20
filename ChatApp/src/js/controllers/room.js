@@ -45,6 +45,12 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
             }
             $scope.$apply();
         });
+
+        socket.on("recv_privatemsg", function(userName, msgObject) { 
+            console.log("Received private message: " + msgObject + " from user: " + userName);
+            $scope.messages.push(msgObject); 
+            $scope.$apply();
+        });
     }
     $scope.leave = function() {
         if (socket) {
@@ -56,8 +62,17 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
 
     $scope.send = function() {
         if(socket) {
-            console.log("I sent a message to " + $scope.roomName + ": " + $scope.currentMessage);
-            socket.emit("sendmsg", { roomName: $scope.roomName, msg: $scope.currentMessage });
+            //If is private message 
+            if ($scope.currentMessage.substring(0,2) == '/t' || $scope.currentMessage.substring(0,5) == '/send') {
+                var userName = $scope.currentMessage.split(' ')[1]; 
+                var message = $scope.currentMessage.split(' ').splice(2).join(' '); 
+                console.log("I sent a private message to " + userName + ": " + message); 
+                socket.emit('privatemsg', { nick: userName, message: message}, function(success, errorMessage) {});
+            }
+            else {
+                console.log("I sent a message to " + $scope.roomName + ": " + $scope.currentMessage);
+                socket.emit("sendmsg", { roomName: $scope.roomName, msg: $scope.currentMessage });
+            }
             $scope.currentMessage = "";
         }
     };
