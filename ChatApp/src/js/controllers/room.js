@@ -71,9 +71,9 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                 $scope.messages.push({message: message, nick: "You sent (private): ", timestamp: new Date()});
             }
             else if ($scope.currentMessage.substring(0,2) == '/kick' || $scope.currentMessage.substring(0,5) == '/k') {
-                var userName = $scope.currentMessage.split(' ')[1]; 
-                console.log("I just kicked " + userName); 
-                socket.emit('kick', { nick: userName, message: message}, function(success, errorMessage) {});
+                var kickedUser = $scope.currentMessage.split(' ')[1]; 
+                console.log("I just kicked " + kickedUser); 
+                //socket.emit('kick', { nick: kickedUser, message: message}, function(success, errorMessage) {});
             }
             else {
                 console.log("I sent a message to " + $scope.roomName + ": " + $scope.currentMessage);
