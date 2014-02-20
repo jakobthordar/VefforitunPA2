@@ -1,0 +1,13 @@
+<div class="container">
+    <h1>Welcome to the menu</h1>
+    <div>
+        <ul style ="list-style: none">
+            <li>Rooms:</li>
+            <li ng-repeat="room in rooms">
+                <strong>{{room}}</strong>
+            </li>
+        </ul>
+    </div>
+    <input ng-model="roomname" placeholder="Insert room name here">
+    <button ng-click="join()">Join!</button>
+</div>

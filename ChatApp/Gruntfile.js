@@ -18,6 +18,7 @@ module.exports = function(grunt) {
             'src/js/app.js', 
             'src/js/controllers/login.js',
             'src/js/controllers/room.js',
+            'src/js/controllers/menu.js',
             'src/js/services/socket.js'
             ],
             dest: 'build/production.js',
