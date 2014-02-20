@@ -69,6 +69,11 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                 console.log("I sent a private message to " + userName + ": " + message); 
                 socket.emit('privatemsg', { nick: userName, message: message}, function(success, errorMessage) {});
             }
+            else if ($scope.currentMessage.substring(0,2) == '/kick' || $scope.currentMessage.substring(0,5) == '/k') {
+                var userName = $scope.currentMessage.split(' ')[1]; 
+                console.log("I just kicked " + userName); 
+                socket.emit('kick', { nick: userName, message: message}, function(success, errorMessage) {});
+            }
             else {
                 console.log("I sent a message to " + $scope.roomName + ": " + $scope.currentMessage);
                 socket.emit("sendmsg", { roomName: $scope.roomName, msg: $scope.currentMessage });
