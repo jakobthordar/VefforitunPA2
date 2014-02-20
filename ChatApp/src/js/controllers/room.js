@@ -48,7 +48,7 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
 
         socket.on("recv_privatemsg", function(userName, msgObject) { 
             console.log("Received private message: " + msgObject + " from user: " + userName);
-            $scope.messages.push(msgObject); 
+            $scope.messages.push({message: msgObject, nick: userName + " sent (private): ", timestamp: new Date()}); 
             $scope.$apply();
         });
     }
@@ -68,6 +68,7 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                 var message = $scope.currentMessage.split(' ').splice(2).join(' '); 
                 console.log("I sent a private message to " + userName + ": " + message); 
                 socket.emit('privatemsg', { nick: userName, message: message}, function(success, errorMessage) {});
+                $scope.messages.push({message: message, nick: "You sent (private): ", timestamp: new Date()});
             }
             else {
                 console.log("I sent a message to " + $scope.roomName + ": " + $scope.currentMessage);
