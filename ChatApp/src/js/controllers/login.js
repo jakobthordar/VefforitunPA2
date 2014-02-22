@@ -19,4 +19,9 @@ app.controller("LoginController", ["$scope", "$location", "SocketService", funct
             });
         }
     };
+    $scope.keyPress = function($event) {
+        if($event.keyCode === 13) {
+            $scope.connect();
+        }
+    };
 }]);
