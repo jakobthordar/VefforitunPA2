@@ -225,11 +225,6 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-    /* I Jakob Þórðarson wrote this function */
-    socket.on("updateUsersPls", function(updateObj, fn) {
-        io.sockets.emit('updateusers', banObj.room, rooms[banObj.room].users, rooms[banObj.room].ops);
-    });
-
     //Handles banning the user from a room.
     socket.on('ban', function (banObj, fn) {
         if(rooms[banObj.room].ops[socket.username] !== undefined) {
@@ -251,7 +246,8 @@ io.sockets.on('connection', function (socket) {
             //Remove the user from the room ban list.
             delete rooms[unbanObj.room].banned[unbanObj.user];
             /* I Jakob Þórðarson added this line */
-            io.sockets.emit('unbanned', banObj.room, rooms[banObj.room].users, rooms[banObj.room].ops);
+            /* Send the unban message only to the specific user */
+            users[unbanObj.user].socket.emit('unbanned', unbanObj.room, unbanObj.user, socket.username);
             fn(true);
         }
         fn(false);

@@ -4,11 +4,18 @@
         <ul style ="list-style: none">
             <li>Rooms:</li>
             <li ng-repeat="room in rooms">
-            <strong>{{room}}</strong>
+                <strong>{{room}}</strong>
             </li>
-            <li>{{ banMessage }}</li>
         </ul>
     </div>
     <input ng-model="roomname" placeholder="Insert room name here">
     <button ng-click="join()">Join!</button>
+    <div>
+        <ul style ="list-style: none">
+            <li>You are banned from the following rooms:</li>
+            <li ng-repeat="banroom in banrooms">
+                <strong>{{banroom}}</strong>
+            </li>
+        </ul>
+    </div>
 </div>

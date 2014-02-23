@@ -23,7 +23,7 @@ app.factory("SocketService", ["$http", function($http) {
         },
         removeUserBanned: function(room) {
             var index = roomBanned.indexOf(room);
-            if(index <= 0){
+            if(index > -1){
                 roomBanned.splice(index, 1);
             }
         },
@@ -36,16 +36,21 @@ app.factory("SocketService", ["$http", function($http) {
         getUserBannedList: function(room) {
             return roomBanned;
         },
-        isUserBanned: function(room) {
-            if(roomBanned.indexOf(room) < 0){
+        isUserBanned: function() { /* Checks if the user is banned from any room */
+            if(roomBanned.length === 0) {
                 return false;
             }
-            else {
-                return true; 
+            return true;
+        },
+        isUserBannedFromRoom: function(room) {
+        /* Checks if the user is banned from a specific room */
+            if(roomBanned.indexOf(room) < 0) {
+                return false;
             }
+            return true; 
         },
         isUserOp: function(room) {
-            if((roomOp == room) && (isOp === true)){
+            if((roomOp == room) && (isOp === true)) {
                 return true;
             }
             return false;
