@@ -11,7 +11,10 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
     };
 
     if(socket) {
+        $scope.$on('$destroy', function(event) {
+            socket.removeAllListeners();
 
+        });
         /* Initially update the userlist */
         if(SocketService.isUserBannedFromRoom($scope.roomName) === true){
             socket.emit("partroom", $scope.roomName);
@@ -20,6 +23,7 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
         }
         else{
             console.log("Inside joinroom");
+            
             socket.emit("joinroom", { room: $scope.roomName, pass: "" }, function(success, errorMessage) {});
 
             /* You receive this message each time the chat updates */
@@ -50,9 +54,8 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
 
             socket.on("opped", function(room, user, opname) {
                 if(SocketService.getUsername() == user) {
-
-                    console.log("You just got opped by: " + opname);
-                    $location.path("/menu");
+                    SocketService.setUserOp(room, user);
+                    console.log("Huzzah! You just got opped by: " + opname);
                 }
             };
 
