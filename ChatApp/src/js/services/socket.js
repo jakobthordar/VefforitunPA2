@@ -6,20 +6,12 @@ app.factory("SocketService", ["$http", function($http) {
     var isOp = false;
     var banMessage = "";
     return {
+        /* Miscallaneous functions */
         setConnected: function(theSocket) {
             socket = theSocket;
         },
         setUsername: function(user) {
             username = user;
-        },
-        setUserOp: function(room, op) {
-            if(op == username) {
-                roomOp = room;
-                isOp = true;
-            }
-        },
-        setUserBanned: function(room) {
-            roomBanned.push(room);
         },
         removeUserBanned: function(room) {
             var index = roomBanned.indexOf(room);
@@ -33,38 +25,45 @@ app.factory("SocketService", ["$http", function($http) {
         getSocket: function() {
             return socket;
         },
+
+        /* Functions for banning manipulation */
+        setUserBanned: function(room) {
+            roomBanned.push(room);
+        },
         getUserBannedList: function(room) {
             return roomBanned;
         },
-        isUserBanned: function() { /* Checks if the user is banned from any room */
+        isUserBanned: function() { 
             if(roomBanned.length === 0) {
                 return false;
             }
             return true;
         },
         isUserBannedFromRoom: function(room) {
-        /* Checks if the user is banned from a specific room */
             if(roomBanned.indexOf(room) < 0) {
                 return false;
             }
             return true; 
         },
+
+        /* Functions for operator manipulation */
         isUserOp: function(room) {
             if((roomOp == room) && (isOp === true)) {
                 return true;
             }
             return false;
         },
-        setBanMessage: function(room) {
-            banMessage = room;
-        },
-        getBanMessage: function() {
-            var tempmessage = "";
-            if(banMessage !== "") {
-                tempmessage = "You have been banned from: " + banMessage;
-                banMessage = "";
+        setUserOp: function(room, op) {
+            if(op == username) {
+                roomOp = room;
+                isOp = true;
             }
-            return tempmessage;
+        },
+        removeUserOp: function(room, op) {
+            if(op == username) {
+                roomOp = "";
+                isOp = false;
+            }
         }
     };
 }]);

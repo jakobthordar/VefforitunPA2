@@ -24,7 +24,6 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
         }
         else{
             console.log("Inside joinroom");
-            
             socket.emit("joinroom", { room: $scope.roomName, pass: "" }, function(success, errorMessage) {});
 
             /* You receive this message each time the chat updates */
@@ -42,7 +41,6 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
 
             /* If you receive a kicked message you are removed from the room and returned to the menu */
             socket.on("kicked", function(room, user, opname) {
-                console.log("Kicking: " + user);
                 console.log("Sockerservice name: " + SocketService.getUsername());
                 if(SocketService.getUsername() == user) {
                     console.log("You just got kicked by: " + opname);
@@ -59,12 +57,21 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                 }
             });
 
+            /* If you receive an opped message you have been opped up! */
             socket.on("opped", function(room, user, opname) {
                 if(SocketService.getUsername() == user) {
                     SocketService.setUserOp(room, user);
                     console.log("Huzzah! You just got opped by: " + opname);
                 }
-            };
+            });
+
+            /* If you receive a deopped message you have been deopped down :( */
+            socket.on("deopped", function(room, user, opname) {
+                if(SocketService.getUsername() == user) {
+                    SocketService.removeUserOp(room, user);
+                    console.log("Boo, you just got deopped by: " + opname);
+                }
+            });
 
             /* You receive this message each time the users list updates, when someone leaves, joins is kicked etc */
             socket.on("updateusers", function(room, users, ops) {
@@ -111,7 +118,6 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                    you have to be OP to be able to kick people, no newbs allowed */
                 else if ($scope.currentMessage.substring(0,5) == '/kick' || $scope.currentMessage.substring(0,2) == '/k') {
                     if(SocketService.isUserOp($scope.roomName) === true) {
-                        console.log("Kicking");
                         var kickedUser = $scope.currentMessage.split(' ')[1]; 
                         console.log("I just kicked " + kickedUser); 
                         socket.emit('kick', { user: kickedUser, room: $scope.roomName}, function(success, errorMessage) {});
@@ -123,7 +129,6 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                    you have to be OP to be able to ban people, no newbs allowed */
                 else if ($scope.currentMessage.substring(0,4) == '/ban' || $scope.currentMessage.substring(0,2) == '/b') {
                     if(SocketService.isUserOp($scope.roomName) === true) {
-                        console.log("Banning");
                         var bannedUser = $scope.currentMessage.split(' ')[1];
                         console.log("I just banned " + bannedUser);
                         socket.emit("ban", {user: bannedUser, room: $scope.roomName}, function(success, errorMessage) {}); 
@@ -135,7 +140,6 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                  * you have to be OP to be able to unban people, no newbs allowed */
                 else if ($scope.currentMessage.substring(0,6) == '/unban' || $scope.currentMessage.substring(0,3) == '/ub') {
                     if(SocketService.isUserOp($scope.roomName) === true) {
-                        console.log("Unbanning");
                         var unbannedUser = $scope.currentMessage.split(' ')[1];
                         console.log("I just unbanned " + unbannedUser);
                         socket.emit("unban", {user: unbannedUser, room: $scope.roomName}, function(success, errorMessage) {}); 
@@ -147,6 +151,14 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                         var oppedUser = $scope.currentMessage.split(' ')[1];
                         console.log("I just opped " + oppedUser);
                         socket.emit("op", {user: oppedUser, room: $scope.roomName}, function(success, errorMessage) {});
+                    }
+                }
+                /* Parse message for deop */
+                else if ($scope.currentMessage.substring(0,5) == '/deop') {
+                    if(SocketService.isUserOp($scope.roomName) === true) {
+                        var deoppedUser = $scope.currentMessage.split(' ')[1];
+                        console.log("I just deopped " + deoppedUser);
+                        socket.emit("deop", {user: deoppedUser, room: $scope.roomName}, function(success, errorMessage) {});
                     }
                 }
                 /* If all else fails we resort to sending a message */
