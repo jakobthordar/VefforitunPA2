@@ -70,7 +70,7 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                         console.log("User: " + user);
                     }
                     for (var op in ops) {
-                        tempusers.push(op);
+                        tempusers.push("@" + op);
                         SocketService.setUserOp(room, op);
                         console.log("Op: " + op);
                     }
