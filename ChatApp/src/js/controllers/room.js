@@ -3,6 +3,7 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
     $scope.currentMessage = "";
     $scope.users = [];
     $scope.messages = [];
+    $scope.messageIds = []; 
 
     var socket = SocketService.getSocket();
 
@@ -25,7 +26,13 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
             /* You receive this message each time the chat updates */
             socket.on("updatechat", function(roomname, messageHistory) {
                 console.log("test: " + messageHistory);
-                $scope.messages = messageHistory;
+                for (var i = 0; i < messageHistory.length; i++) {
+                    if ($scope.messageIds.indexOf(messageHistory[i].id) == -1) {
+                        $scope.messages.push(messageHistory[i]);
+                        $scope.messageIds.push(messageHistory[i].id);
+                    }
+                }
+                //$scope.messages = messageHistory;
                 $scope.$apply();
             });
 

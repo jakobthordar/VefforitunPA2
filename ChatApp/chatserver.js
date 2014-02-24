@@ -10,6 +10,8 @@ server.listen(8080);
 var rooms = {};
 //Global user object, since we want to know what rooms each user is in etc.
 var users = {};
+//id counter for messages
+var messageId = 0; 
 
 //Default room.
 rooms.lobby = new Room();
@@ -115,9 +117,11 @@ io.sockets.on('connection', function (socket) {
             //Update the message history for the room that the user sent the message to.
             var messageObj = {
                 nick : socket.username,
-        timestamp :  new Date(),
-        message : data.msg.substring(0, 200)
+                timestamp :  new Date(),
+                message : data.msg.substring(0, 200),
+                id: messageId
             };
+            messageId += 1; 
             rooms[data.roomName].addMessage(messageObj);
             io.sockets.emit('updatechat', data.roomName, rooms[data.roomName].messageHistory);
         }
