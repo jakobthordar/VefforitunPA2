@@ -41,8 +41,6 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
 
             /* If you receive a banned message you are removed from the room and returned to the menu */
             socket.on("banned", function(room, user, opname) {
-                console.log("Banning: " + user);
-                console.log("Sockerservice name: " + SocketService.getUsername());
                 if(SocketService.getUsername() == user) {
                     SocketService.setUserBanned(room);
                     console.log("You just got banned by: " + opname);
@@ -50,16 +48,13 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                 }
             });
 
-            /* If you receive an unbanned message you are removed from the banned array in socket services */
-           // socket.on("unbanned", function(room, user, opname) {
-           //     console.log("Unbanning: " + user);
-           //     console.log("Socketservice name: " + SocketService.getUsername());
-           //     if(SocketService.getUsername() == user) {
-           //         SocketService.removeUserBanned(room);
-           //         console.log("You have been removed from the banned user list");
-           //     }
-           // }//);
-            
+            socket.on("opped", function(room, user, opname) {
+                if(SocketService.getUsername() == user) {
+
+                    console.log("You just got opped by: " + opname);
+                    $location.path("/menu");
+                }
+            };
 
             /* You receive this message each time the users list updates, when someone leaves, joins is kicked etc */
             socket.on("updateusers", function(room, users, ops) {
@@ -134,6 +129,14 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
                         var unbannedUser = $scope.currentMessage.split(' ')[1];
                         console.log("I just unbanned " + unbannedUser);
                         socket.emit("unban", {user: unbannedUser, room: $scope.roomName}, function(success, errorMessage) {}); 
+                    }
+                }
+                /* Parse message for op */
+                else if ($scope.currentMessage.substring(0,3) == '/op') {
+                    if(SocketService.isUserOp($scope.roomName) === true) {
+                        var oppedUser = $scope.currentMessage.split(' ')[1];
+                        console.log("I just opped " + oppedUser);
+                        socket.emit("op", {user: oppedUser, room: $scope.roomName}, function(success, errorMessage) {});
                     }
                 }
                 /* If all else fails we resort to sending a message */
