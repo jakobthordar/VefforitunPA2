@@ -60,5 +60,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'uglify', 'concat', 'connect'/*'watch'*/]);
+  grunt.registerTask('default', ['jshint', 'uglify', 'concat', 'connect']);
 };

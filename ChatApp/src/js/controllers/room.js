@@ -14,7 +14,6 @@ app.controller("RoomController", ["$scope", "$location", "$routeParams", "Socket
     if(socket) {
         $scope.$on('$destroy', function(event) {
             socket.removeAllListeners();
-
         });
         /* Initially update the userlist */
         if(SocketService.isUserBannedFromRoom($scope.roomName) === true){

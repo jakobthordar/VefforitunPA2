@@ -251,6 +251,7 @@ io.sockets.on('connection', function (socket) {
             delete rooms[unbanObj.room].banned[unbanObj.user];
             /* I Jakob Þórðarson added this line */
             /* Send the unban message only to the specific user */
+            /* So that I am able to uptate the list in the menu */
             users[unbanObj.user].socket.emit('unbanned', unbanObj.room, unbanObj.user, socket.username);
             fn(true);
         }
