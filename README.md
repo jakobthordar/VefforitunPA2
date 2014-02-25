@@ -1,14 +1,12 @@
-VefforitunPA2
+IRC v2.0
 =============
 
-IRC v2.0
-/******************************/
-/** Project by:              **/
-/** Jakob Þórðarson          **/ 
-/** Kristleifur Þorsteinsson **/
-/******************************/
+Project by:
+Jakob Þórðarson
+Kristleifur Þorsteinsson
 
-
+Programming assignment 2
+T-427-WEPO
 
 Dependencies:
 =============
