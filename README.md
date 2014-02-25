@@ -2,22 +2,21 @@ IRC v2.0
 =============
 
 Project by:
-Jakob Þórðarson
-Kristleifur Þorsteinsson
+Jakob Þórðarson and Kristleifur Þorsteinsson
 
-Programming assignment 2
+Programming assignment 2 -
 T-427-WEPO
 
 Dependencies:
 =============
 You have to have npm, bower, nodejs and python installed.
-With bower you have to install: angular-route
-                                angular
-                                angularjs
-                                jquery
-                                jQuery
-                                node
-                                bootstrap
+With bower you have to install: angular-route, 
+                                angular, 
+                                angularjs, 
+                                jquery, 
+                                jQuery, 
+                                node, 
+                                bootstrap, 
                                 sizzle
 
 How to run the program
